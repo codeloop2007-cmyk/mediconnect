@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
+    public User() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

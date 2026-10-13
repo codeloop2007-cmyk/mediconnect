@@ -9,10 +9,10 @@ import java.math.BigDecimal;
 @Table(name = "doctors")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Doctor {
+    public Doctor() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

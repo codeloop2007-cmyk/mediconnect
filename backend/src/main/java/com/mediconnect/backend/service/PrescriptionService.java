@@ -17,12 +17,19 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
     private final ConsultationService consultationService;
     private final PatientRepository patientRepository;
+
+    public PrescriptionService(PrescriptionRepository prescriptionRepository,
+                               ConsultationService consultationService,
+                               PatientRepository patientRepository) {
+        this.prescriptionRepository = prescriptionRepository;
+        this.consultationService = consultationService;
+        this.patientRepository = patientRepository;
+    }
 
     @Transactional
     public PrescriptionResponse issuePrescription(PrescriptionRequest request) {

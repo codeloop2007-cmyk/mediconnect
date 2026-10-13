@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Table(name = "doctor_notes")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DoctorNote {
+    public DoctorNote() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,10 +5,8 @@ import com.mediconnect.backend.dto.DoctorResponse;
 import com.mediconnect.backend.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +16,28 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/doctors")
-@RequiredArgsConstructor
 @Tag(name = "Doctors", description = "Endpoints for searching and managing doctor profiles")
 public class DoctorController {
 
     private final DoctorService doctorService;
+
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
+
+    @Operation(
+            summary = "Semantic search doctors by symptoms",
+            description = "Performs PostgreSQL pgvector cosine similarity search over doctor embeddings based on patient symptoms."
+    )
+    @GetMapping("/semantic-search")
+    public ResponseEntity<List<DoctorResponse>> semanticSearch(
+            @Parameter(description = "Patient symptoms or medical inquiry", required = true)
+            @RequestParam String query,
+            @Parameter(description = "Maximum number of doctor matches to return (default 5)")
+            @RequestParam(defaultValue = "5") int limit) {
+        List<DoctorResponse> doctors = doctorService.semanticSearchDoctors(query, limit);
+        return ResponseEntity.ok(doctors);
+    }
 
     @Operation(
             summary = "Search and filter doctors",
@@ -52,8 +67,7 @@ public class DoctorController {
 
     @Operation(
             summary = "Create a doctor profile",
-            description = "Creates a new doctor profile in the system.",
-            security = @SecurityRequirement(name = "BearerAuth")
+            description = "Creates a new doctor profile in the system and automatically generates vector embedding in PostgreSQL via pgvector."
     )
     @PostMapping
     public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody DoctorRequest request) {

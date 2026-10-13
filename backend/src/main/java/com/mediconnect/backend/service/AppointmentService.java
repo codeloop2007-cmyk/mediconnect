@@ -24,12 +24,19 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorService doctorService;
+
+    public AppointmentService(AppointmentRepository appointmentRepository,
+                              PatientRepository patientRepository,
+                              DoctorService doctorService) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.doctorService = doctorService;
+    }
 
     @Transactional
     public AppointmentResponse bookAppointment(AppointmentRequest request) {

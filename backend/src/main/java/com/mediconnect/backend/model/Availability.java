@@ -12,10 +12,10 @@ import java.time.LocalTime;
 })
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Availability {
+    public Availability() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,11 +16,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
     private final DoctorService doctorService;
+
+    public AvailabilityService(AvailabilityRepository availabilityRepository, DoctorService doctorService) {
+        this.availabilityRepository = availabilityRepository;
+        this.doctorService = doctorService;
+    }
 
     @Transactional
     public AvailabilityResponse createAvailability(AvailabilityRequest request) {

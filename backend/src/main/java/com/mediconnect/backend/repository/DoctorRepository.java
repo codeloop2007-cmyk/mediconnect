@@ -21,5 +21,13 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
                                @Param("language") String language,
                                @Param("location") String location,
                                @Param("maxFee") BigDecimal maxFee);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query(value = "UPDATE doctors SET embedding = CAST(:vector AS vector) WHERE doctor_id = :doctorId", nativeQuery = true)
+    void updateDoctorEmbedding(@Param("doctorId") Long doctorId, @Param("vector") String vector);
+
+    @Query(value = "SELECT * FROM doctors WHERE embedding IS NOT NULL ORDER BY embedding <=> CAST(:vector AS vector) LIMIT :limit", nativeQuery = true)
+    List<Doctor> findNearestDoctorsByVector(@Param("vector") String vector, @Param("limit") int limit);
 }
 

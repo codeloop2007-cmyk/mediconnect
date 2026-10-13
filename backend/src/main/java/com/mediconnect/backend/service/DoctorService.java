@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import com.mediconnect.backend.client.AiServiceClient;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,10 +20,12 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final ReviewRepository reviewRepository;
+    private final AiServiceClient aiServiceClient;
 
-    public DoctorService(DoctorRepository doctorRepository, ReviewRepository reviewRepository) {
+    public DoctorService(DoctorRepository doctorRepository, ReviewRepository reviewRepository, AiServiceClient aiServiceClient) {
         this.doctorRepository = doctorRepository;
         this.reviewRepository = reviewRepository;
+        this.aiServiceClient = aiServiceClient;
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +71,37 @@ public class DoctorService {
                 .build();
 
         Doctor savedDoctor = doctorRepository.save(doctor);
+
+        // Generate vector embedding via Python AI microservice and update PostgreSQL pgvector
+        String profileText = savedDoctor.getName() + " " +
+                savedDoctor.getSpecialization() + " " +
+                (savedDoctor.getQualification() != null ? savedDoctor.getQualification() : "") + " " +
+                (savedDoctor.getLocation() != null ? savedDoctor.getLocation() : "");
+        String vectorString = aiServiceClient.getEmbeddingVectorString(profileText);
+        if (vectorString != null) {
+            doctorRepository.updateDoctorEmbedding(savedDoctor.getDoctorId(), vectorString);
+        }
+
         return mapToDoctorResponse(savedDoctor);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DoctorResponse> semanticSearchDoctors(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return searchDoctors(null, null, null, null);
+        }
+
+        String vectorString = aiServiceClient.getEmbeddingVectorString(query);
+        if (vectorString == null) {
+            // Fallback to keyword search if AI microservice is not reachable
+            return searchDoctors(query, null, null, null);
+        }
+
+        int safeLimit = (limit > 0 && limit <= 50) ? limit : 5;
+        List<Doctor> nearestDoctors = doctorRepository.findNearestDoctorsByVector(vectorString, safeLimit);
+        return nearestDoctors.stream()
+                .map(this::mapToDoctorResponse)
+                .collect(Collectors.toList());
     }
 
     public Doctor getDoctorEntity(Long doctorId) {

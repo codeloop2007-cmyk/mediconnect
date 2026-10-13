@@ -4,7 +4,6 @@ import com.mediconnect.backend.dto.ReviewRequest;
 import com.mediconnect.backend.dto.ReviewResponse;
 import com.mediconnect.backend.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,7 @@ public class ReviewController {
 
     @Operation(
             summary = "Submit a doctor review",
-            description = "Submits a rating (1-5) and comment after a consultation.",
-            security = @SecurityRequirement(name = "BearerAuth")
+            description = "Submits a rating (1-5) and comment after a consultation."
     )
     @PostMapping
     public ResponseEntity<ReviewResponse> submitReview(@Valid @RequestBody ReviewRequest request) {

@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Review {
+    public Review() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

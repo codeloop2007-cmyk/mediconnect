@@ -18,12 +18,19 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class DoctorNoteService {
 
     private final DoctorNoteRepository doctorNoteRepository;
     private final DoctorService doctorService;
     private final PatientRepository patientRepository;
+
+    public DoctorNoteService(DoctorNoteRepository doctorNoteRepository,
+                             DoctorService doctorService,
+                             PatientRepository patientRepository) {
+        this.doctorNoteRepository = doctorNoteRepository;
+        this.doctorService = doctorService;
+        this.patientRepository = patientRepository;
+    }
 
     @Transactional
     public DoctorNoteResponse createDoctorNote(DoctorNoteRequest request) {

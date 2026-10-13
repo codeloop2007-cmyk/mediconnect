@@ -4,7 +4,6 @@ import com.mediconnect.backend.dto.PrescriptionRequest;
 import com.mediconnect.backend.dto.PrescriptionResponse;
 import com.mediconnect.backend.service.PrescriptionService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/v1/prescriptions")
 @RequiredArgsConstructor
 @Tag(name = "Prescriptions", description = "Endpoints for generating and viewing digital prescriptions")
-@SecurityRequirement(name = "BearerAuth")
 public class PrescriptionController {
 
     private final PrescriptionService prescriptionService;

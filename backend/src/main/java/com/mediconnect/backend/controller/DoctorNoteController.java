@@ -4,7 +4,6 @@ import com.mediconnect.backend.dto.DoctorNoteRequest;
 import com.mediconnect.backend.dto.DoctorNoteResponse;
 import com.mediconnect.backend.service.DoctorNoteService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/v1/doctor-notes")
 @RequiredArgsConstructor
 @Tag(name = "Doctor Notes", description = "Endpoints for managing private clinical notes on patient history")
-@SecurityRequirement(name = "BearerAuth")
 public class DoctorNoteController {
 
     private final DoctorNoteService doctorNoteService;

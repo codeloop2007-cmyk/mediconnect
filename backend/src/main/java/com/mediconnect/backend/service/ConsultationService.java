@@ -18,12 +18,19 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ConsultationService {
 
     private final ConsultationRepository consultationRepository;
     private final AppointmentRepository appointmentRepository;
     private final AppointmentService appointmentService;
+
+    public ConsultationService(ConsultationRepository consultationRepository,
+                               AppointmentRepository appointmentRepository,
+                               AppointmentService appointmentService) {
+        this.consultationRepository = consultationRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentService = appointmentService;
+    }
 
     @Transactional
     public ConsultationResponse createConsultation(ConsultationRequest request) {

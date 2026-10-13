@@ -5,7 +5,6 @@ import com.mediconnect.backend.dto.AvailabilityResponse;
 import com.mediconnect.backend.service.AvailabilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/v1/availabilities")
 @RequiredArgsConstructor
 @Tag(name = "Doctor Availability", description = "Endpoints for configuring and querying doctor availability schedules")
-@SecurityRequirement(name = "BearerAuth")
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
